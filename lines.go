@@ -39,12 +39,23 @@ type Prediction struct {
 	Min             string
 }
 
-type Predictions struct {
+func (p Prediction) String() string {
+	return fmt.Sprintf(
+		"%s car train to %s arriving at %s in %s (Group %s)",
+		p.Car,
+		p.DestinationCode,
+		p.LocationCode,
+		p.Min,
+		p.Group,
+	)
+}
+
+type predictions struct {
 	Trains []Prediction
 }
 
 func (s Station) Predictions() ([]Prediction, error) {
-	target := Predictions{}
+	target := predictions{}
 	err := internal.Get(
 		fmt.Sprintf("StationPrediction.svc/json/GetPrediction/%s", s.Code),
 		map[string]string{},
@@ -53,12 +64,12 @@ func (s Station) Predictions() ([]Prediction, error) {
 	return target.Trains, err
 }
 
-type StationList struct {
+type stations struct {
 	Stations []Station
 }
 
 func Stations(whatLine line) (map[string]Station, error) {
-	target := StationList{}
+	target := stations{}
 	err := internal.Get("Rail.svc/json/jStations", map[string]string{
 		"LineCode": string(whatLine),
 	}, &target)
