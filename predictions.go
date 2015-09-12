@@ -49,7 +49,6 @@ func (p Prediction) GetDestination() (*Station, error) {
 }
 
 func (p Prediction) GetLocation() (*Station, error) {
-	fmt.Printf("%s\n", p.LocationCode)
 	if p.LocationCode == "" {
 		return nil, fmt.Errorf("No known location")
 	}
