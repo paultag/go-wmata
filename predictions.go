@@ -46,7 +46,7 @@ func (predictions Predictions) Group(group string) Predictions {
 	return ret
 }
 
-func GetPredictions(codes ...string) (Predictions, error) {
+func GetPredictionsByCodes(codes ...string) (Predictions, error) {
 	target := internalPredictions{}
 	err := internal.Get(
 		fmt.Sprintf("StationPrediction.svc/json/GetPrediction/%s", strings.Join(codes, ",")),
