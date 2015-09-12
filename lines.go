@@ -2,14 +2,27 @@ package wmata
 
 import (
 	"fmt"
+	"strings"
 )
 
 type Line struct {
 	Code string
 }
 
+func (l *Line) UnmarshalJSON(data []byte) error {
+	if len(data) == 0 {
+		return fmt.Errorf("Empty data coming in")
+	}
+	if data[0] != '"' || data[len(data)-1] != '"' {
+		return fmt.Errorf("Not a string")
+	}
+	data = data[1 : len(data)-1]
+	l.Code = strings.TrimSpace(string(data))
+	return nil
+}
+
 func (l Line) Name() string {
-	if name, present := map[string]string{
+	if name, ok := map[string]string{
 		"RD": "Red Line",
 		"YL": "Yellow Line",
 		"GR": "Green Line",
@@ -17,7 +30,7 @@ func (l Line) Name() string {
 		"OR": "Orange Line",
 		"SV": "Silver Line",
 		"NO": "No Passenger",
-	}[l.Code]; present {
+	}[l.Code]; ok {
 		return name
 	}
 	return fmt.Sprintf("Unknown Line: Code: %s", l.Code)
