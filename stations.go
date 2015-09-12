@@ -9,12 +9,12 @@ import (
 type Station struct {
 	Code             string
 	Name             string
-	stationTogether1 string `json:"StationTogether1"`
-	stationTogether2 string `json:"StationTogether2"`
-	lineCode1        string `json:"LineCode1"`
-	lineCode2        string `json:"LineCode2"`
-	lineCode3        string `json:"LineCode3"`
-	lineCode4        string `json:"LineCode4"`
+	StationTogether1 string
+	StationTogether2 string
+	LineCode1        string
+	LineCode2        string
+	LineCode3        string
+	LineCode4        string
 	Lat              float64
 	Lon              float64
 }
@@ -26,10 +26,10 @@ func (s Station) Line() Line {
 func (s Station) Lines() []Line {
 	ret := []Line{}
 	for _, code := range []string{
-		s.lineCode1,
-		s.lineCode2,
-		s.lineCode3,
-		s.lineCode4,
+		s.LineCode1,
+		s.LineCode2,
+		s.LineCode3,
+		s.LineCode4,
 	} {
 		ret = append(ret, Line{Code: code})
 	}
@@ -50,10 +50,10 @@ func GetStations() ([]Station, error) {
 	return target.Stations, err
 }
 
-func GetStation(stationCode string) (Station, error) {
+func GetStation(stationCode string) (*Station, error) {
 	target := Station{}
 	err := internal.Get("Rail.svc/json/jStationInfo", map[string]string{
 		"StationCode": stationCode,
 	}, &target)
-	return target, err
+	return &target, err
 }

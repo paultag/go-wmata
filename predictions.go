@@ -8,15 +8,32 @@ import (
 )
 
 type Prediction struct {
-	Cars            string `json:"Car"`
-	Destination     string
-	desitnationCode string `json:"DestinationCode"`
+	Cars        string `json:"Car"`
+	Destination string
+	Group       string
+	Line        Line
+	Minutes     string `json:"Min"`
+
 	DesitnationName string
-	Group           string
-	Line            Line
-	locationCode    string `json:"LocationCode"`
-	LocationName    string
-	Minutes         string `json:"Min"`
+	DesitnationCode string
+
+	LocationName string
+	LocationCode string
+}
+
+func (p Prediction) GetDestination() (*Station, error) {
+	if p.DesitnationCode == "" {
+		return nil, fmt.Errorf("No known desitnation")
+	}
+	return GetStation(p.DesitnationCode)
+}
+
+func (p Prediction) GetLocation() (*Station, error) {
+	fmt.Printf("%s\n", p.LocationCode)
+	if p.LocationCode == "" {
+		return nil, fmt.Errorf("No known location")
+	}
+	return GetStation(p.LocationCode)
 }
 
 func (p Prediction) String() string {
@@ -56,5 +73,5 @@ func GetPredictionsByCodes(codes ...string) (Predictions, error) {
 }
 
 func (s Station) GetPredictions() (Predictions, error) {
-	return GetPredictions(s.Code)
+	return GetPredictionsByCodes(s.Code)
 }

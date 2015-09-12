@@ -23,17 +23,19 @@ func (l *Line) UnmarshalJSON(data []byte) error {
 
 func (l Line) Name() string {
 	if name, ok := map[string]string{
-		"RD": "Red Line",
-		"YL": "Yellow Line",
-		"GR": "Green Line",
-		"BL": "Blue Line",
-		"OR": "Orange Line",
-		"SV": "Silver Line",
-		"NO": "No Passenger",
+		"RD": "Red",
+		"YL": "Yellow",
+		"GR": "Green",
+		"BL": "Blue",
+		"OR": "Orange",
+		"SV": "Silver",
+		"No": "No Passenger",
+		"":   "No Passenger",
+		"--": "No Passenger",
 	}[l.Code]; ok {
 		return name
 	}
-	return fmt.Sprintf("Unknown Line: Code: %s", l.Code)
+	return fmt.Sprintf("Unknown (%s)", l.Code)
 }
 
 var RedLine = Line{Code: "RD"}
