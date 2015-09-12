@@ -42,7 +42,7 @@ func Get(resource string, params map[string]string, target interface{}) error {
 	}
 	values.Set("api_key", apiKey)
 	resource = fmt.Sprintf("%s/%s?%s", apiHost, resource, values.Encode())
-	fmt.Printf("%s\n", resource)
+	// fmt.Printf("%s\n", resource)
 	resp, err := http.Get(resource)
 	if resp.StatusCode != 200 {
 		return fmt.Errorf("Error: Non-200 status code: %d", resp.StatusCode)
