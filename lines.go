@@ -18,13 +18,42 @@ type Station struct {
 	Code             string
 	Lat              float64
 	Lon              float64
-	LineCode1        string
-	LineCode2        string
-	LineCode3        string
-	LineCode4        string
+	LineCode1        line
+	LineCode2        line
+	LineCode3        line
+	LineCode4        line
 	Name             string
 	StationTogether1 string
 	StationTogether2 string
+}
+
+func (s Station) AllLines() []line {
+	ret := []line{s.LineCode1}
+	for _, lineCode := range []line{
+		s.LineCode2,
+		s.LineCode3,
+		s.LineCode4,
+	} {
+		ret = append(ret, lineCode)
+	}
+	return ret
+}
+
+func (s Station) AllStations() []Station {
+	ret := []Station{s}
+	for _, stationTogether := range []string{
+		s.StationTogether1,
+		s.StationTogether2,
+	} {
+		if stationTogether != "" {
+			ret = append(ret, Station{Code: stationTogether})
+		}
+	}
+	return ret
+}
+
+func (s Station) String() string {
+	return fmt.Sprintf("%s station (%s)", s.Name, s.Code)
 }
 
 type Prediction struct {
