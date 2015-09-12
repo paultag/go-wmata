@@ -30,12 +30,24 @@ func (p Prediction) String() string {
 	)
 }
 
-type Predictions struct {
-	Trains []Prediction
+type internalPredictions struct {
+	Trains Predictions
 }
 
-func GetPredictions(codes ...string) ([]Prediction, error) {
-	target := Predictions{}
+type Predictions []Prediction
+
+func (predictions Predictions) Group(group string) Predictions {
+	ret := Predictions{}
+	for _, prediction := range predictions {
+		if prediction.Group == group {
+			ret = append(ret, prediction)
+		}
+	}
+	return ret
+}
+
+func GetPredictions(codes ...string) (Predictions, error) {
+	target := internalPredictions{}
 	err := internal.Get(
 		fmt.Sprintf("StationPrediction.svc/json/GetPrediction/%s", strings.Join(codes, ",")),
 		map[string]string{},
@@ -43,6 +55,6 @@ func GetPredictions(codes ...string) ([]Prediction, error) {
 	return target.Trains, err
 }
 
-func (s Station) GetPredictions() ([]Prediction, error) {
+func (s Station) GetPredictions() (Predictions, error) {
 	return GetPredictions(s.Code)
 }
