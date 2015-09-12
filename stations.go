@@ -64,6 +64,14 @@ type Stations struct {
 	Stations []Station
 }
 
+func (l Line) GetStations() ([]Station, error) {
+	target := Stations{}
+	err := internal.Get("Rail.svc/json/jStations", map[string]string{
+		"LineCode": l.Code,
+	}, &target)
+	return target.Stations, err
+}
+
 func GetStations() ([]Station, error) {
 	target := Stations{}
 	err := internal.Get("Rail.svc/json/jStations", map[string]string{}, &target)
