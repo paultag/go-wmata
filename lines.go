@@ -2,112 +2,35 @@ package wmata
 
 import (
 	"fmt"
-	"pault.ag/go/wmata/internal"
 )
 
-type line string
-
-var RedLine line = "RD"
-var YellowLine line = "YL"
-var GreenLine line = "GR"
-var BlueLine line = "BL"
-var OrangeLine line = "OR"
-var SilverLine line = "SV"
-
-type Station struct {
-	Code             string
-	Lat              float64
-	Lon              float64
-	LineCode1        line
-	LineCode2        line
-	LineCode3        line
-	LineCode4        line
-	Name             string
-	StationTogether1 string
-	StationTogether2 string
+type Line struct {
+	Code string
 }
 
-func (s Station) AllLines() []line {
-	ret := []line{s.LineCode1}
-	for _, lineCode := range []line{
-		s.LineCode2,
-		s.LineCode3,
-		s.LineCode4,
-	} {
-		ret = append(ret, lineCode)
+func (l Line) Name() string {
+	if name, present := map[string]string{
+		"RD": "Red Line",
+		"YL": "Yellow Line",
+		"GR": "Green Line",
+		"BL": "Blue Line",
+		"OR": "Orange Line",
+		"SV": "Silver Line",
+		"NO": "No Passenger",
+	}[l.Code]; present {
+		return name
 	}
-	return ret
+	return fmt.Sprintf("Unknown Line: Code: %s", l.Code)
 }
 
-func (s Station) AllStations() []Station {
-	ret := []Station{s}
-	for _, stationTogether := range []string{
-		s.StationTogether1,
-		s.StationTogether2,
-	} {
-		if stationTogether != "" {
-			ret = append(ret, Station{Code: stationTogether})
-		}
-	}
-	return ret
-}
+var RedLine = Line{Code: "RD"}
+var YellowLine = Line{Code: "YL"}
+var GreenLine = Line{Code: "GR"}
+var BlueLine = Line{Code: "BL"}
+var OrangeLine = Line{Code: "OR"}
+var SilverLine = Line{Code: "SV"}
 
-func (s Station) String() string {
-	return fmt.Sprintf("%s station (%s)", s.Name, s.Code)
-}
-
-type Prediction struct {
-	Car             string
-	Destination     string
-	DestinationCode string
-	DestinationName string
-	Group           string
-	Line            line
-	LocationCode    string
-	LocationName    string
-	Min             string
-}
-
-func (p Prediction) String() string {
-	return fmt.Sprintf(
-		"%s car train to %s arriving at %s in %s (Group %s)",
-		p.Car,
-		p.DestinationCode,
-		p.LocationCode,
-		p.Min,
-		p.Group,
-	)
-}
-
-type predictions struct {
-	Trains []Prediction
-}
-
-func (s Station) Predictions() ([]Prediction, error) {
-	target := predictions{}
-	err := internal.Get(
-		fmt.Sprintf("StationPrediction.svc/json/GetPrediction/%s", s.Code),
-		map[string]string{},
-		&target,
-	)
-	return target.Trains, err
-}
-
-type stations struct {
-	Stations []Station
-}
-
-func Stations(whatLine line) (map[string]Station, error) {
-	target := stations{}
-	err := internal.Get("Rail.svc/json/jStations", map[string]string{
-		"LineCode": string(whatLine),
-	}, &target)
-	ret := map[string]Station{}
-	if err != nil {
-		return ret, err
-	}
-	for _, station := range target.Stations {
-		ret[station.Code] = station
-	}
-	return ret, err
+var Lines = []Line{
+	RedLine, YellowLine, GreenLine,
+	BlueLine, OrangeLine, SilverLine,
 }
