@@ -23,6 +23,7 @@ package wmata
 import (
 	"fmt"
 
+	"pault.ag/go/haversine"
 	"pault.ag/go/wmata/internal"
 )
 
@@ -37,6 +38,14 @@ type Station struct {
 	LineCode4        string
 	Lat              float64
 	Lon              float64
+}
+
+func (p *Station) Point() haversine.Point {
+	return haversine.Point{Lat: p.Lat, Lon: p.Lon}
+}
+
+func (origin Station) MetresTo(other Station) haversine.Metres {
+	return origin.Point().MetresTo(other.Point())
 }
 
 func (s Station) Line() Line {
