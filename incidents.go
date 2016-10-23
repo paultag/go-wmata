@@ -49,10 +49,10 @@ func (t *semiString) UnmarshalJSON(buf []byte) error {
 }
 
 type Incident struct {
-	DateUpdated   wmataTime
+	Updated       wmataTime `json:"DateUpdated"`
 	Description   string
-	IncidentID    string
-	IncidentType  string
+	ID            string `json:"IncidentID"`
+	Type          string `json:"IncidentType"`
 	LinesAffected semiString
 }
 
