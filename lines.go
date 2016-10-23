@@ -70,4 +70,13 @@ var Lines = []Line{
 	BlueLine, OrangeLine, SilverLine,
 }
 
+var LineMap = map[string]Line{
+	"RD": RedLine,
+	"YL": YellowLine,
+	"GR": GreenLine,
+	"BL": BlueLine,
+	"OR": OrangeLine,
+	"SV": SilverLine,
+}
+
 // vim: foldmethod=marker
