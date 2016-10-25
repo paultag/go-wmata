@@ -40,11 +40,15 @@ func (t *wmataTime) UnmarshalJSON(buf []byte) error {
 	return nil
 }
 
-type semiString []string
+type semiLines []Line
 
-func (t *semiString) UnmarshalJSON(buf []byte) error {
+func (t *semiLines) UnmarshalJSON(buf []byte) error {
 	buf = buf[1 : len(buf)-1]
-	*t = semiString(strings.Split(string(buf), ";"))
+	lines := []Line{}
+	for _, el := range strings.Split(string(buf), ";") {
+		lines = append(lines, LineMap[el])
+	}
+	*t = lines
 	return nil
 }
 
@@ -53,7 +57,7 @@ type Incident struct {
 	Description   string
 	ID            string `json:"IncidentID"`
 	Type          string `json:"IncidentType"`
-	LinesAffected semiString
+	LinesAffected semiLines
 }
 
 type Incidents struct {
